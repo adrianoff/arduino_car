@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset='utf-8'>
+    <title>Speak Test</title>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+<body>
+
+<hr />
+
+<button id="hearjs">Speak</button>
+
+
+
+<script>
+    if (!('webkitSpeechRecognition' in window)) {
+        upgrade();
+    }
+
+    $(document).ready(function() {
+        $("#hearjs").click(function () {
+            var recognizer = new webkitSpeechRecognition();
+        })
+    });
+</script>
+
+</body>
+</html>

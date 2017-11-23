@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset='utf-8'>
+    <title>Car Remote Controller</title>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<body>
+<table>
+    <tr>
+        <td colspan="2" align="center">
+            <input type="button" id="f_button" value="FORWARD">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="button" id="l_button" value="LEFT">
+        </td>
+        <td>
+            <input type="button" id="r_button" value="RIGHT">
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" align="center">
+            <input type="button" id="b_button" value="BACK">
+        </td>
+    </tr>
+</table>
+
+<hr />
+
+<div id="output"></div>
+
+
+
+<script>
+
+    var output = document.getElementById("output");
+    try {
+        //var host = "ws://coder-life.ru:9999";
+        var host = "ws://localhost:9999";
+        console.log("Host:", host);
+
+        var s = new WebSocket(host);
+
+        s.onopen = function (e) {
+            console.log("Socket opened.");
+        };
+
+        s.onclose = function (e) {
+            console.log("Socket closed.");
+        };
+
+        s.onmessage = function (e) {
+            console.log("Socket message:", e.data);
+            var p = document.createElement("p");
+            p.innerHTML = e.data;
+            output.appendChild(p);
+        };
+
+        s.onerror = function (e) {
+            console.log("Socket error:", e);
+        };
+
+    } catch (ex) {
+        console.log("Socket exception:", ex);
+    }
+
+    $( document ).ready(function() {
+        var fButtonPressed = false;
+        var bButtonPressed = false;
+        var lButtonPressed = false;
+        var rButtonPressed = false;
+
+        $("#f_button").mouseup(function () {
+            fButtonPressed = false;
+            console.log("UP");
+        }).mousedown(function () {
+            fButtonPressed = true;
+            console.log("DOWN");
+        }).blur(function () {
+            fButtonPressed = false;
+            console.log("UP");
+        }).focusout(function () {
+            fButtonPressed = false;
+            console.log("UP");
+        }).mouseleave(function () {
+            fButtonPressed = false;
+            console.log("UP");
+        }).mouseout(function () {
+            fButtonPressed = false;
+            console.log("UP");
+        });
+
+        $("#b_button").mouseup(function () {
+            bButtonPressed = false;
+            console.log("UP");
+        }).mousedown(function () {
+            bButtonPressed = true;
+            console.log("DOWN");
+        }).blur(function () {
+            bButtonPressed = false;
+            console.log("UP");
+        }).focusout(function () {
+            bButtonPressed = false;
+            console.log("UP");
+        }).mouseleave(function () {
+            bButtonPressed = false;
+            console.log("UP");
+        }).mouseout(function () {
+            bButtonPressed = false;
+            console.log("UP");
+        });
+
+        $("#l_button").mouseup(function () {
+            lButtonPressed = false;
+            console.log("UP");
+        }).mousedown(function () {
+            lButtonPressed = true;
+            console.log("DOWN");
+        }).blur(function () {
+            lButtonPressed = false;
+            console.log("UP");
+        }).focusout(function () {
+            lButtonPressed = false;
+            console.log("UP");
+        }).mouseleave(function () {
+            lButtonPressed = false;
+            console.log("UP");
+        }).mouseout(function () {
+            lButtonPressed = false;
+            console.log("UP");
+        });
+
+        $("#r_button").mouseup(function () {
+            rButtonPressed = false;
+            console.log("UP");
+        }).mousedown(function () {
+            rButtonPressed = true;
+            console.log("DOWN");
+        }).blur(function () {
+            rButtonPressed = false;
+            console.log("UP");
+        }).focusout(function () {
+            rButtonPressed = false;
+            console.log("UP");
+        }).mouseleave(function () {
+            rButtonPressed = false;
+            console.log("UP");
+        }).mouseout(function () {
+            rButtonPressed = false;
+            console.log("UP");
+        });
+
+        setInterval(function () {
+            if (fButtonPressed) {
+                console.log("SEND F");
+                s.send("F");
+            }
+        }, 10);
+        setInterval(function () {
+            if (bButtonPressed) {
+                console.log("SEND B");
+                s.send("B");
+            }
+        }, 10);
+        setInterval(function () {
+            if (lButtonPressed) {
+                console.log("SEND L");
+                s.send("L");
+            }
+        }, 10);
+        setInterval(function () {
+            if (rButtonPressed) {
+                console.log("SEND R");
+                s.send("R");
+            }
+        }, 10);
+    });
+</script>
+
+</body>
+</html>

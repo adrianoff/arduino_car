@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Car Remote Controller</title>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <br />
+    <table width="100%">
+        <tr>
+            <td style="width: 33%; text-align: right;">
+                <div class="btn-group-vertical">
+                    <button class="btn btn-primary btn-lg" style="height: 90px; width: 100px;" id="l_button">&lArr;LEFT</button>
+                </div>
+            </td>
+            <td style="width: 33%; text-align: center;">
+                <div class="btn-group-vertical">
+                    <button class="btn btn-primary btn-lg" id="f_button">&uArr;<br />FORWARD</button>
+                    <button class="btn btn-primary btn-lg" id="b_button">BACK<br />&dArr;</button>
+                </div>
+            </td>
+            <td style="width: 33%; text-align: left;">
+                <div class="btn-group-vertical">
+                    <button class="btn btn-primary btn-lg" style="height: 90px; width: 100px;" id="r_button">RIGHT&rArr;</button>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <br />
+    <div id="output"></div>
+
+</div>
+
+
+<script>
+
+    var output = document.getElementById("output");
+    try {
+        //var host = "ws://coder-life.ru:9999";
+        var host = "ws://localhost:9999";
+        console.log("Host:", host);
+
+        var s = new WebSocket(host);
+
+        s.onopen = function (e) {
+            console.log("Socket opened.");
+        };
+
+        s.onclose = function (e) {
+            console.log("Socket closed.");
+        };
+
+        s.onmessage = function (e) {
+            console.log("Socket message:", e.data);
+            //output.innerHTML = e.data;
+            if (e.data != 'F' && e.data != 'B' && e.data != 'L' && e.data != 'R') {
+                s.close();
+            }
+        };
+
+        s.onerror = function (e) {
+            console.log("Socket error:", e);
+            s.close();
+        };
+
+    } catch (ex) {
+        console.log("Socket exception:", ex);
+    }
+
+    $( document ).ready(function() {
+        $('button').bind('contextmenu', function(e) {
+            return false;
+        });
+
+        var fButtonPressed = false;
+        var bButtonPressed = false;
+        var lButtonPressed = false;
+        var rButtonPressed = false;
+
+        $( "#f_button" ).bind("vmousedown", vmousedownHandlerF);
+        function vmousedownHandlerF(event){
+            fButtonPressed = true;
+            console.log("DOWN");
+        }
+        $("#b_button").bind("vmousedown", vmousedownHandlerB);
+        function vmousedownHandlerB(event){
+            bButtonPressed = true;
+            console.log("DOWN");
+        }
+        $("#l_button").bind("vmousedown", vmousedownHandlerL);
+        function vmousedownHandlerL(event){
+            lButtonPressed = true;
+            console.log("DOWN");
+        }
+        $("#r_button").bind("vmousedown", vmousedownHandlerR);
+        function vmousedownHandlerR(event){
+            rButtonPressed = true;
+            console.log("DOWN");
+        }
+        $("button").bind( "vmouseup", vmouseupHandler );
+        $("button").bind( "vmouseout", vmouseupHandler );
+        $("button").bind( "vmouseover", vmouseupHandler );
+        $("button").bind( "vmousecancel", vmouseupHandler );
+        function vmouseupHandler(event){
+            fButtonPressed = false;
+            bButtonPressed = false;
+            lButtonPressed = false;
+            rButtonPressed = false;
+            console.log("UP");
+        }
+
+        setInterval(function () {
+            if (fButtonPressed) {
+                console.log("SEND F");
+                s.send("F");
+            }
+            if (bButtonPressed) {
+                console.log("SEND B");
+                s.send("B");
+            }
+            if (lButtonPressed) {
+                console.log("SEND L");
+                s.send("L");
+            }
+            if (rButtonPressed) {
+                console.log("SEND R");
+                s.send("R");
+            }
+        }, 10);
+    });
+</script>
+
+</body>
+</html>
