@@ -1,5 +1,5 @@
 # arduino_car
-Radio-controlled with Arduino and Raspberry inside
+Radio-controlled car with Arduino and Raspberry inside
 
 https://www.youtube.com/watch?v=CHe23H-Dpm4
 
